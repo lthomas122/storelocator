@@ -503,7 +503,7 @@
           },
           distance: storeDistance
         };
-        $.get("/storestemplate.html", function(data) {
+        $.get("https://lthomas122.github.io/storelocator/storestemplate.html", function(data) {
 
         var storeTemp = data;
         var li = document.createElement('li');
@@ -546,22 +546,6 @@
         }, options) || ''
       })
     }
-    //var parseJSON = null;
-/*  var locations;
-		$.ajax({
-					 url: "https://uat-media.nisbets.com/static/styles/js/storelocator/stores_UK.jsonp",
-					 type: "GET",
-					 crossDomain: true,
-					 dataType: "jsonp",
-					 success: function (response) {
-							 locations = response;
-					 }
-			 });
-			/* $.getJSON("storelocator/stores.json", function(result){
-			         locations = result;
-			     });*/
-		//AJAX_JSON_Req( '' );
-
 
   var locations = [
       [57.147068, -2.094244, "Aberdeen", "https://www.nisbets.co.uk/aberdeenstore"],
