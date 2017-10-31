@@ -1,0 +1,600 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="combined.css">
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: auto;
+      max-width: 975px;
+      padding: 0;
+    }
+
+    .map-container,
+    #pac-container {
+      position: relative;
+      height: 400px;
+      background: #efefef;
+      overflow-y: auto;
+    }
+
+    #map {
+      /*width: 100%;*/
+      margin: 0 auto;
+      height: 400px;
+    }
+
+    .search-wrapper {
+      background: #ffffff;
+      position: relative;
+      padding: .1em .1em .1em 0;
+      box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.25);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .search-wrapper>a {
+      position: absolute;
+      top: 0;
+      transform: translateX(71%);
+      right: 0;
+      cursor: pointer;
+      width: 15%;
+      text-align: center;
+      height: 100%;
+      bottom: 0;
+      border-left: 1px solid #ddd;
+      transition: .75s ease-in-out;
+    }
+
+    .search-wrapper>a:hover {
+      transform: translateX(0);
+    }
+
+    #pac-input {
+      width: 100%;
+      padding: .35em .5em;
+      border: 0;
+      outline: 0;
+      font-size: 16px;
+      line-height: 22.85px;
+    }
+
+    #storeMapsSearch {
+      width: 96%;
+      float: left;
+      margin: 0;
+    }
+
+    .inner-geo {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto;
+    }
+
+    .search-wrapper>a small {
+      font-size: 75%;
+    }
+
+    svg.geotag {
+      width: 40px;
+      transition: .7s ease-in-out;
+      -moz-transform-origin: center center;
+      -ms-transform-origin: center center;
+      -webkit-transform-origin: center center;
+      transform-origin: center center;
+      vertical-align: middle;
+      padding: .375em;
+      display: inline-block;
+    }
+
+    .search-wrapper>a:hover svg.geotag {
+      -ms-transform: rotate(360deg);
+      -webkit-transform: rotate(360deg);
+      -moz-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+
+    svg.geotag>g>path {
+      fill: #555555;
+      transition: fill .75s ease-in;
+    }
+
+    svg.geotag>g>path:last-child {
+      fill: #888888;
+    }
+
+    .search-wrapper>a:hover svg.geotag>g>path {
+      fill: #2b4591;
+    }
+
+    .map-container #results {
+      position: absolute;
+      max-width: 280px;
+      top: 50%;
+      left: 1em;
+      right: 1em;
+      text-align: center;
+      margin: auto;
+      background: #ffffff;
+      box-shadow: 0 3px 7px 0px rgba( 0, 0, 0, 0.45);
+      display: none;
+      padding: 0;
+      overflow-y: auto;
+      z-index: 990;
+      list-style: none;
+      transform: translateY(-50%);
+    }
+
+    .map-container #results>li {
+      border-bottom: 1px solid #efefef;
+      padding: .75em 1.5em;
+      cursor: pointer;
+      min-height: calc( 100% / 5);
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: 0.3s;
+    }
+
+    .map-container #results>li:hover {
+      color: #2b4591;
+      background: #efefef;
+    }
+
+    .map-container #results>li:last-child {
+      border-bottom: none;
+    }
+
+    #results::before {
+      content: 'Did You Mean...';
+      font-weight: 600;
+      display: block;
+      padding: .2em;
+      background: #dadee9;
+    }
+
+    #storeResults {
+      background: #efefef;
+      padding: 0;
+      list-style-position: inside;
+      margin-bottom: 0;
+      list-style-type: upper-alpha;
+      color: #2b4591;
+      font-weight: 600;
+    }
+
+    #storeResults>li {
+      background: #ffffff;
+      border-bottom: 1px solid #efefef;
+      padding: .5em;
+      /*margin-bottom: 10px;
+      margin-top: 10px;
+      padding: .5em;
+      box-shadow: 0 1px 4px 0px rgba(0,0,0,0.35);*/
+    }
+    #storeResults>li>p {
+      display: inline-block;
+    }
+    .banner-button {
+      font-size: 0.9em;
+      font-weight: 400;
+      line-height: 0.9;
+      text-align: center;
+      display: inline-block;
+      text-decoration: none !important;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+      padding: 8px 9px;
+      color: #ffffff;
+    }
+
+    .banner-button.more-info-stores {
+      background-color: #2b4591;
+      margin-right: 1em;
+    }
+
+    .banner-button.more-info-stores:hover {
+      background-color: #333333;
+      color: #ffffff;
+    }
+
+    .banner-button.get-directions-stores {
+      background-color: #dadee9;
+      color: #222222;
+    }
+
+    .banner-button.get-directions-stores:hover {
+      background-color: #555555;
+      color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="content">
+<div class="col-xs-12">
+  <div class="store__block store__block--blue">
+    <div id="side_bar"></div>
+    <div class="search-wrapper clearfix">
+      <form id="storeMapsSearch">
+        <input id="pac-input" placeholder="Enter a Location..." value="" autocomplete="off" type="text">
+      </form>
+      <a onclick="geoEnable();" type="button" value="geoEnable">
+        <div class="inner-geo">
+          <svg class="geotag" xmlns:x="http://ns.adobe.com/Extensibility/1.0/" xmlns:i="http://ns.adobe.com/AdobeIllustrator/10.0/" xmlns:graph="http://ns.adobe.com/Graphs/1.0/" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 99 100" enable-background="new 0 0 100 100" xml:space="preserve">
+    <g i:extraneous="self"><path d="M45,84.6V95h10V84.6C70.3,82.4,82.4,70.3,84.6,55H95V45H84.6C82.4,29.7,70.3,17.6,55,15.4V5H45v10.4    C29.7,17.6,17.6,29.7,15.4,45H5v10h10.4C17.6,70.3,29.7,82.4,45,84.6z M50,25c13.8,0,25,11.2,25,25S63.8,75,50,75S25,63.8,25,50    S36.2,25,50,25z"></path><path d="M50,65c8.3,0,15-6.7,15-15s-6.7-15-15-15s-15,6.7-15,15S41.7,65,50,65z"></path></g>
+</svg><small>Get My Location</small>
+        </div>
+      </a>
+    </div>
+    <div class="map-container">
+      <ul id="results"></ul>
+      <div id="map" class="col-xs-12 col-md-9 pull-right"></div>
+      <div id="pac-container" class="col-xs-12 col-md-3">
+      <ol id="storeResults" class="row"></ol>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+  if ($("#map").length){
+    $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyBgWHthg1EunbeT6UaFBK7o5xu_L9oQK8A&libraries=geometry,places&callback=initMap", "loaded");
+
+    //Define Globals
+    var markers = []; //Store Markers
+    var userMarker; //User Marker
+    var map;
+    var latlngbounds; //For Map Centering
+
+    function initMap() {
+      userMarker = new google.maps.Marker(); // Assign Empty Marker Object
+      // Create New Map Object
+      map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeControl: false, // Disables Terrain Selection
+        clickableIcons: false // Stops POI icons from being clickable
+      });
+      latlngbounds = new google.maps.LatLngBounds(); // Assign Empty Bounds for Map
+      generateMarkers(locations); // Create Store Markers
+
+
+      // Add a marker clusterer to manage the markers.
+      /*var markerCluster = new MarkerClusterer(map, markers,
+          {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});*/
+
+
+      var input = document.getElementById('pac-input'); // Declare Search Input
+
+      var autocomplete = new google.maps.places.Autocomplete(input); // Assign Input to New Autocomplete Object
+      autocomplete.setComponentRestrictions({
+        'country': ['uk']
+      }); // Restrict Suggestions by country
+
+
+
+      /*  var options = {
+          bounds: new google.maps.LatLngBounds(new google.maps.LatLng(49.383639452689664, -17.39866406249996),new google.maps.LatLng(59.53530451232491, 8.968523437500039)),
+          types: [('cities')]
+        };*/
+      //autocomplete.setOptions({strictBounds: true});
+      // Bind the map's bounds (viewport) property to the autocomplete object,
+      // so that the autocomplete requests use the current map bounds for the
+      // bounds option in the request.
+      //autocomplete.bindTo('bounds', map);
+
+      // Listens to autocomplete searchbox to see if location has been selected
+      autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+        var searchTerms = $('#pac-input').val();
+        if (!place.geometry && searchTerms != "") { // if no place has been found
+          initService(searchTerms); // Search suggestions and print them to a list
+          return; // stops error in console
+        } else {
+          latlngbounds = null; // Resets maps bounds
+          userMarker.setMap(null); // Resets User Marker
+          userMarker = new google.maps.Marker({ // Assigns New User Marker
+            map: map,
+            //optimized: false,
+            icon: {url: 'stores_user_marker.svg'},
+            zIndex: 1
+          });
+          userMarker.setVisible(false); // Weird thing included in the Google API Docs
+          if (place.geometry.viewport) { // this checks if the selected place is within the current map viewport
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+          }
+          userMarker.setPosition(place.geometry.location); // Set position of User Marker
+          userMarker.setVisible(true);
+          setMapBounds(userMarker.getPosition()); // Repositions Map bounds to ensure User Marker is in view
+          findClosestN(userMarker.getPosition()); // Finds the closest stores to User Marker
+        }
+        var address = ''; // Don't know what this does, I assume it compiles the suggestion list ¯\_(ツ)_/¯
+        if (place.address_components) {
+          address = [
+            (place.address_components[0] && place.address_components[0].short_name || ''),
+            (place.address_components[1] && place.address_components[1].short_name || ''),
+            (place.address_components[2] && place.address_components[2].short_name || '')
+          ].join(' ');
+        }
+      });
+
+    }
+
+    // Closest Stores Function
+    function findClosestN(pt) {
+      var closest = [];
+      for (var i = 0; i < markers.length; i++) { // Iterates through each marker
+        markers[i].distance = google.maps.geometry.spherical.computeDistanceBetween(pt, markers[i].getPosition()); // compares distance of store with User Marker
+        resetStoreMarkers(markers[i]);
+        if (markers[i].distance < 40000) {// If the distance is less than 40k metres
+          closest.push(markers[i]); // push stores to the "closest" object
+          closest.sort(sortByDist); // sort object by nearest first
+        }
+      }
+      for (var i = 0; i < closest.length; i++){
+        nearbyStoreMarkers(closest[i], i);
+      }
+      closestStoreLimit(closest, pt); // this basically generates a list of stores if there are no stores within 40k
+      return storeResults(closest); // Compiles the store info into a list on the DOM
+    }
+
+    function closestStoreLimit(csl, point) {
+      var result = [];
+      if (csl.length == 0) { // if there are no stores, reiterate through store markers object
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].distance = google.maps.geometry.spherical.computeDistanceBetween(point, markers[i].getPosition());
+          result.push(markers[i]);
+        }
+        result.sort(sortByDist);
+        for (var i = 0; i < 1; i++) { // Find the nearest store
+          csl.push(result[i]);
+          nearbyStoreMarkers(result[i], i);
+        }
+        return csl
+      } else {
+        return csl
+      }
+    }
+
+    function nearbyStoreMarkers(cMarker, i){
+      var labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      cMarker.setLabel({
+        text: labels[i % labels.length],
+        color: "#2b4591",
+        fontWeight: "900",
+        fontFamily: "Georgia",
+        fontSize: "16px"
+      });
+      cMarker.setIcon({
+        url: "nisbets_storelocated_marker.png",
+        labelOrigin: new google.maps.Point(13,9.5),
+        optimized: false,
+        zIndex: 1
+      });
+      setMapBounds(cMarker.getPosition());
+    }
+
+    function resetStoreMarkers(cMarker) {
+      cMarker.setLabel(null);
+      cMarker.setIcon({
+        url: "nisbets_storelocator_marker.png"
+      });
+    }
+
+    function sortByDist(a, b) {
+      return (a.distance - b.distance)
+    }
+
+    function setMapBounds(points) {
+      if (latlngbounds == null || undefined || 0 || NaN) {
+        latlngbounds = new google.maps.LatLngBounds(); // creates new bounds object if bounds object is null
+      }
+      latlngbounds.extend(points); // adds marker coordinates to object
+      var bounds = new google.maps.LatLngBounds();
+      map.setCenter(latlngbounds.getCenter());
+      map.fitBounds(latlngbounds); // resizes and centers map
+    }
+
+    function generateMarkers(points) {
+      //var iconBase = "https://media.nisbets.com/static/content/banners/";
+      for (var i = 0; i < points.length; i++) {
+        var place = points[i];
+        var myLatLng = new google.maps.LatLng(place[0], place[1]);
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          name: place[2],
+          clickable: true,
+          map: map,
+          icon: /*iconBase + */"nisbets_storelocator_marker.png",
+          url: place[3]
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          window.location.href = this.url;
+        });
+        setMapBounds(marker.getPosition());
+        markers.push(marker);
+      }
+    }
+
+    $('#storeMapsSearch').submit(function(e) {
+      e.preventDefault();
+    });
+
+    function initService(query) {
+      document.getElementById('results').style.display = "block";
+      document.getElementById('results').innerHTML = "";
+      var displaySuggestions = function(predictions, status) {
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          return;
+        }
+
+        predictions.forEach(function(prediction) {
+          var li = document.createElement('li');
+          li.appendChild(document.createTextNode(prediction.description));
+          var placeId = prediction.place_id;
+          li.setAttribute("data-id", placeId);
+          document.getElementById('results').appendChild(li);
+          li.addEventListener('click', function() {
+            resultMarker(placeId);
+            document.getElementById('results').innerHTML = "";
+            document.getElementById('results').style.display = "none";
+          });
+        });
+      };
+
+      var service = new google.maps.places.AutocompleteService();
+      service.getPlacePredictions({
+        input: query,
+        componentRestrictions: {
+          'country': ['uk']
+        }
+      }, displaySuggestions);
+
+    }
+
+    function resultMarker(id) {
+      var service = new google.maps.places.PlacesService(map);
+      service.getDetails({
+        placeId: id
+      }, function(result, status) {
+        if (status != google.maps.places.PlacesServiceStatus.OK) {
+          alert(status);
+          return;
+        }
+        userMarker.setMap(null);
+        userMarker = new google.maps.Marker({
+          map: map,
+          zIndex: 1,
+          icon: {url: 'stores_user_marker.svg'},
+          place: {
+            placeId: id,
+            location: result.geometry.location
+          }
+        });
+        latlngbounds = null;
+        userMarker.setPosition(result.geometry.location);
+        setMapBounds(userMarker.getPosition());
+        findClosestN(userMarker.getPosition());
+      });
+    }
+
+    function storeResults(stores) {
+      document.getElementById('storeResults').innerHTML = "";
+      stores.forEach(function(store) {
+        store.distance = google.maps.geometry.spherical.computeDistanceBetween(userMarker.getPosition(), store.getPosition());
+        var storeDistance = kmToMiles(store.distance);
+        var storeData = {
+          name: store.name,
+          url: store.url,
+          origin: {
+            lat: userMarker.position.lat(),
+            lng: userMarker.position.lng()
+          },
+          destination: {
+            lat: store.position.lat(),
+            lng: store.position.lat()
+          },
+          distance: storeDistance
+        };
+        $.get("/storestemplate.html", function(data) {
+
+        var storeTemp = data;
+        var li = document.createElement('li');
+        li.innerHTML = renderStores(storeTemp, storeData);
+        document.getElementById('storeResults').appendChild(li);
+      });
+      });
+    }
+
+    function kmToMiles(km) {
+        km = (km / 1000) * 0.621371;
+        return km.toFixed(2);
+    }
+
+    function geoEnable() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          userMarker.setMap(null);
+          userMarker = new google.maps.Marker({
+            position: pos,
+            icon: {url: 'stores_user_marker.svg'},
+            map: map,
+            zIndex: 1
+          });
+          latlngbounds = null;
+          setMapBounds(userMarker.getPosition());
+          findClosestN(userMarker.getPosition());
+        });
+      }
+    }
+
+    function renderStores(template, options) {
+      return template.replace(/\{\{\s?([\w.]+)\s?\}\}/g, (match, variable) => {
+        return variable.split('.').reduce((previous, current) => {
+          return previous[current]
+        }, options) || ''
+      })
+    }
+    //var parseJSON = null;
+/*  var locations;
+		$.ajax({
+					 url: "https://uat-media.nisbets.com/static/styles/js/storelocator/stores_UK.jsonp",
+					 type: "GET",
+					 crossDomain: true,
+					 dataType: "jsonp",
+					 success: function (response) {
+							 locations = response;
+					 }
+			 });
+			/* $.getJSON("storelocator/stores.json", function(result){
+			         locations = result;
+			     });*/
+		//AJAX_JSON_Req( '' );
+
+
+  var locations = [
+      [57.147068, -2.094244, "Aberdeen", "https://www.nisbets.co.uk/aberdeenstore"],
+      [51.380677, -2.363785, "Bath", "https://www.nisbets.co.uk/bathstore"],
+      [54.60128, -5.93088, "Belfast", "https://www.nisbets.co.uk/belfaststore"],
+      [52.4722045, -1.8993564, "Birmingham", "https://www.nisbets.co.uk/birminghamstore"],
+      [50.8319435, -0.1366962, "Brighton", "https://www.nisbets.co.uk/brightonstore"],
+      [51.50105, -2.693342, "Avonmouth", "https://www.nisbets.co.uk/bristolstore"],
+      [51.469581, -2.5092621, "Bristol City Centre", "https://www.nisbets.co.uk/bristolcentralstore"],
+      [52.188554, 0.136634, "Cambridge", "https://www.nisbets.co.uk/cambridgestore"],
+      [51.480688, -3.193349, "Cardiff", "https://www.nisbets.co.uk/cardiffstore"],
+      [51.72686, 0.48123, "Chelmsford", "https://www.nisbets.co.uk/chelmsfordstore"],
+      [53.1917296, -2.8833241, "Chester", "https://www.nisbets.co.uk/chesterstore"],
+      [55.9459107, -3.201252, "Edinburgh", "https://www.nisbets.co.uk/edinburghstore"],
+      [50.72092, -3.53206, "Exeter", "https://www.nisbets.co.uk/exeterstore"],
+      [51.4770455, -0.2026584, "Fulham Road", "https://www.nisbets.co.uk/fulhamroadstore"],
+      [55.8586218, -4.2491724, "Glasgow", "https://www.nisbets.co.uk/glasgowstore"],
+      [51.413957, -0.300465, "Kingston upon Thames", "https://www.nisbets.co.uk/kingstonstore"],
+      [53.8010483, -1.5337356, "Leeds", "https://www.nisbets.co.uk/leedsstore"],
+      [52.6256952, -1.1476074, "Leicester", "https://www.nisbets.co.uk/leicesterstore"],
+      [53.407645, -2.994256, "Liverpool", "https://www.nisbets.co.uk/liverpoolstore"],
+      [53.47973, -2.2425799, "Manchester", "https://www.nisbets.co.uk/manchesterstore"],
+      [54.96436, -1.6281699, "Newcastle", "https://www.nisbets.co.uk/newcastlestore"],
+      [52.9528866, -1.145609483, "Nottingham", "https://www.nisbets.co.uk/nottinghamstore"],
+      [51.4567495, -0.9753547, "Reading", "https://www.nisbets.co.uk/readingstore"],
+      [51.5138433, -0.1286658, "Shaftesbury Avenue", "https://www.nisbets.co.uk/shaftesburyavenuestore"],
+      [51.501034, -0.233881, "Shepherd's Bush", "https://www.nisbets.co.uk/shepherdsbushstore"],
+      [51.5214271, -0.0758994, "Shoreditch", "https://www.nisbets.co.uk/shoreditchstore"],
+      [50.908984, -1.412313, "Southampton", "https://www.nisbets.co.uk/southamptonstore"],
+      [53.95729, -1.08815, "York", "https://www.nisbets.co.uk/yorkstore"]
+    ]
+  }
+  </script>
+</body>
+
+</html>

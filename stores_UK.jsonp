@@ -1,0 +1,60 @@
+jsonpCallback({
+"Aberdeen":[57.147068, -2.094244, "Aberdeen", "/aberdeenstore"],
+"Bath":[51.380677, -2.363785, "Bath", "/bathstore"],
+"Belfast":[54.60128, -5.93088, "Belfast", "/belfaststore"],
+"Birmingham":[52.4722045, -1.8993564, "Birmingham", "/birminghamstore"],
+"Brighton":[50.8319435, -0.1366962, "Brighton", "/brightonstore"],
+"Avonmouth":[51.50105, -2.693342, "Avonmouth, Bristol", "/bristolstore"],
+"Bristol":[51.469581, -2.5092621, "Bristol City Centre", "/bristolcentralstore"],
+"Cambridge":[52.188554, 0.136634, "Cambridge", "/cambridgestore"],
+"Cardiff":[51.480688, -3.193349, "Cardiff", "/cardiffstore"],
+"Chelmsford":[51.72686, 0.48123, "Chelmsford", "/chelmsfordstore"],
+"Chester":[53.1917296, -2.8833241, "Chester", "/chesterstore"],
+"Edinburgh":[55.9459107, -3.201252, "Edinburgh", "/edinburghstore"],
+"Exeter":[50.72092, -3.53206, "Exeter", "/exeterstore"],
+"Fulham":[51.4770455, -0.2026584, "Fulham Road", "/fulhamroadstore"],
+"Glasgow":[55.8586218, -4.2491724, "Glasgow", "/glasgowstore"],
+"Kingston":[51.413957, -0.300465, "Kingston upon Thames", "/kingstonstore"],
+"Leeds":[53.8010483, -1.5337356, "Leeds", "/leedsstore"],
+"Leicester":[52.6256952, -1.1476074, "Leicester", "/leicesterstore"],
+"Liverpool":[53.407645, -2.994256, "Liverpool", "/liverpoolstore"],
+"Manchester":[53.47973, -2.2425799, "Manchester", "/manchesterstore"],
+"Newcastle":[54.96436, -1.6281699, "Newcastle upon Tyne", "/newcastlestore"],
+"Nottingham":[52.9528866, -1.145609483, "Nottingham", "/nottinghamstore"],
+"Reading":[51.4567495, -0.9753547, "Reading", "/readingstore"],
+"Shaftesbury":[51.5138433, -0.1286658, "Shaftesbury Avenue", "/shaftesburyavenuestore"],
+"Shepherd":[51.501034, -0.233881, "Shepherd's Bush", "/shepherdsbushstore"],
+"Shoreditch":[51.5214271, -0.0758994, "Shoreditch", "/shoreditchstore"],
+"Southampton":[50.908984, -1.412313, "Southampton", "/southamptonstore"],
+"York":[53.95729, -1.08815, "York", "/yorkstore"]
+})
+
+
+UK_BHSHOP_POS;52.4724;-1.8992
+UK_BNSH01_POS;50.8318;-0.1366
+UK_BSSH01_POS;51.4601;-2.5811
+UK_CFSH01_POS;51.4806;-3.1934
+UK_EXSH01_POS;50.7209;-3.5317
+UK_GWSH01_POS;55.8586;-4.2488
+UK_SHLS01_POS;53.8014;-1.5339
+UK_LNSH03_POS;51.4803;-0.1972
+UK_PGSHOP_POS;51.5136;-0.1288
+UK_LNSH02_POS;51.5216;-0.0761
+UK_MNSH01_POS;53.4795;-2.2426
+UK_SOSH01_POS;50.9089;-1.4124
+UK_NGSH01_POS;52.9529;-1.1458
+UK_CBSH01_POS;52.1884;0.1364
+UK_LESH01_POS;52.6254;-1.1458
+UK_ABSH01_POS;57.1469;-2.0951
+UK_CHSH01_POS;53.1923;-2.8813
+UK_EHSH01_POS;55.9457;-3.2012
+UK_LVSH01_POS;53.4075;-2.9944
+UK_CMSH01_POS;51.7269;0.4803
+UK_YOSH01_POS;53.9574;-1.0865
+UK_KTSH01_POS;51.4139;-0.3005
+UK_RGSH01_POS;51.4569;-0.9741
+UK_BTSH01_POS;54.6015;-5.9309
+UK_NESH01_POS;54.9642;-1.6282
+UK_LNSH04_POS;51.5010;-0.2339
+UK_BSSH02_POS;51.5011;-2.6936
+UK_BASH01_POS;51.3808;-2.3649
